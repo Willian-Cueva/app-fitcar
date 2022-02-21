@@ -1,4 +1,5 @@
-import 'package:asistente_mecanico/pages/landing.dart';
+
+import 'package:fit_car/pages/landing.dart';
 import 'package:flutter/material.dart';
 
 void main() {
