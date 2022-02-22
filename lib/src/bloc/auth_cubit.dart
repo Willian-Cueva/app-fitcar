@@ -17,7 +17,8 @@ class AuthCubit extends Cubit<AuthState> {
   void _authStateChanged(AuthUser? user) =>
       user == null ? emit(AuthSignedOut()) : emit(AuthSignedIn(user));
 
-  Future<void> signInAnonimously() => _signIn(_authRepository.signInAnonymously());
+  Future<void> signInAnonimously() =>
+      _signIn(_authRepository.signInAnonymously());
 
   Future<void> _signIn(Future<AuthUser?> auxUser) async {
     try {
@@ -31,6 +32,11 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthError('Error: ${e.toString()}'));
     }
+  }
+
+  Future<void> signOut() async {
+    await _authRepository.signOut();
+    emit(AuthSignedOut());
   }
 
   @override

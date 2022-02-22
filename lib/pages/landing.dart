@@ -1,9 +1,9 @@
+import 'package:fit_car/widgets/mi_appbar.dart';
 import 'package:flutter/material.dart';
 
 class Landing extends StatefulWidget {
-  const Landing({Key? key, required this.title}) : super(key: key);
+  static Widget create(BuildContext context) => Landing();
 
-  final String title;
 
   @override
   State<Landing> createState() => _LandingState();
@@ -14,13 +14,7 @@ class _LandingState extends State<Landing> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.grey[850],
-          title: Image.asset(
-            "assets/images/logo.png",
-            width: 100,
-          ),
-        ),
+        appBar: MiAppbar(),
         body: Container(
           width: MediaQuery.of(context).size.width,
           child: Stack(
