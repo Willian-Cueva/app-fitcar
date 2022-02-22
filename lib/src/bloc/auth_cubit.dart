@@ -10,6 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._authRepository) : super(AuthInitialState());
 
   Future<void> init() async {
+    await Future.delayed(const Duration(seconds: 3));
     _authSubscription =
         _authRepository.onAuthStateChanged.listen(_authStateChanged);
   }
