@@ -1,4 +1,3 @@
-
 import 'package:fit_car/pages/landing.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Roboto',
       ),
       home: const Landing(title: "Landing"),
     );
