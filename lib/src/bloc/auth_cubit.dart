@@ -21,6 +21,9 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInAnonimously() =>
       _signIn(_authRepository.signInAnonymously());
 
+  Future<void> signInWithGoogle() =>
+      _signIn(_authRepository.signInWithGoogle());
+
   Future<void> _signIn(Future<AuthUser?> auxUser) async {
     try {
       emit(AuthSigningIn());

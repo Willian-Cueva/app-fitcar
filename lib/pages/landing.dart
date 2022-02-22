@@ -44,7 +44,7 @@ class _LandingState extends State<Landing> {
                         )),
                         if(isSigningIn) CircularProgressIndicator(),
                     const Padding(padding: EdgeInsets.all(10)),
-                    ElevatedButton(onPressed: () {}, child: const Text("Accede")),
+                    ElevatedButton(onPressed: ()=>context.read<AuthCubit>().signInWithGoogle(), child: const Text("Accede")),
                   ],
                 )
               ],
