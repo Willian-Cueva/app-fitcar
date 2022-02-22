@@ -21,29 +21,37 @@ class _LandingState extends State<Landing> {
             width: 100,
           ),
         ),
-        body: Container(
-          child: Stack(
-            children: <Widget>[
-              Column(
+        body: ListView(
+          children: <Widget>[
+            Center(
+              child: Stack(
                 children: <Widget>[
-                  Center(
+                  Container(
+                    height: 500,
                     child: Image.asset(
-                      "assets/images/logo.png",
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: 200,
+                      "assets/images/landing-mecanico.png",
+                      fit: BoxFit.none,
+                      scale: 8,
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.chevron_right,
-                      color: Colors.white,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: const Text(
+                          "MANTÉN TU VEHÍCULO AL DÍA, CON FITCAR",
+                          style: TextStyle(color: Colors.white70, fontSize: 30),
+                        ),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {}, child: const Text("Accede")),
+                    ],
                   )
                 ],
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ));
   }
 }
