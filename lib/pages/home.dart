@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class Home extends StatelessWidget {
   static Widget create(BuildContext context) => Home();
 
+  var email;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,11 +16,23 @@ class Home extends StatelessWidget {
         buildWhen: (previous, current) => current is AuthSignedIn,
         builder: (_, state) {
           final authUser = (state as AuthSignedIn).user;
-          return Center(child: Column(children: <Widget>[
-            Text('User: ${authUser.uid}'),
-            SizedBox(height: 16,),
-            ElevatedButton(onPressed: ()=>context.read<AuthCubit>().signOut(), child: Text("Salir"))
-          ],));
+          email = authUser.email;
+          return Center(
+              child: Column(
+            children: <Widget>[
+              Text('User: ${authUser.uid}'),
+              SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                  onPressed: () => context.read<AuthCubit>().signOut(),
+                  child: Text("Salir")),
+              ElevatedButton(
+                child: Icon(Icons.add_reaction_rounded),
+                onPressed: () => print(email),
+              ),
+            ],
+          ));
         },
       ),
     );
