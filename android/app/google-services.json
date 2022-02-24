@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "822649225851-hnhlpo4onmfd4rff9t80kdu6e1f4sovt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.asistente_mecanico",
+            "certificate_hash": "00faf4528a99af9c5756527d24bfc263f995b9d0"
+          }
+        },
+        {
           "client_id": "822649225851-at2e9gutunqqebfbnsd21gsoa64uhgg2.apps.googleusercontent.com",
           "client_type": 3
         }

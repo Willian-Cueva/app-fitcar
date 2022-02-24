@@ -1,23 +1,22 @@
-import 'package:fit_car/pages/landing.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fit_car/src/app.dart';
+import 'package:fit_car/src/bloc/auth_cubit.dart';
+import 'package:fit_car/src/repository/implementations/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final authCubit = AuthCubit(AuthRepository());
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fit Car',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Roboto',
-      ),
-      home: const Landing(title: "Landing"),
-    );
-  }
+  runApp(
+    BlocProvider(
+      create: (_) => authCubit..init(),
+      child: MyApp.create(),
+    ),
+  );
 }
