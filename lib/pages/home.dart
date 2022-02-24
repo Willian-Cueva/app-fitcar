@@ -1,13 +1,27 @@
+import 'package:fit_car/models/reqres.dart';
 import 'package:fit_car/src/bloc/auth_cubit.dart';
 import 'package:fit_car/widgets/mi_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-Future<int> getStatusCode() async {
-  var url = Uri.parse('https://jsonplaceholder.typicode.com/users');
-  http.Response response = await http.get(url);
-  return response.statusCode;
+// const URL = "https://asistente-mecanico.herokuapp.com/api/vehiculos/";
+const URL = "https://192.168.1.15:3000/api/vehiculos/";
+
+Future<ReqResVehiculos> getVehiculos(var email) async {
+  var uri = Uri.parse(URL + email);
+
+  final resp = await http.get(uri);
+
+  return reqResVehiculosFromJson(resp.body);
+}
+
+Future<ReqResTareas> getTareas(var email) async {
+  var uri = Uri.parse(URL + email);
+
+  final resp = await http.get(uri);
+
+  return reqResTareasFromJson(resp.body);
 }
 
 class Home extends StatelessWidget {
@@ -24,24 +38,45 @@ class Home extends StatelessWidget {
         builder: (_, state) {
           final authUser = (state as AuthSignedIn).user;
           email = authUser.email;
-          return Center(
-              child: Column(
-            children: <Widget>[
-              Text('User: ${authUser.uid}'),
-              SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                  onPressed: () => context.read<AuthCubit>().signOut(),
-                  child: Text("Salir")),
-              ElevatedButton(
-                child: Icon(Icons.add_reaction_rounded),
-                onPressed: () => print(email),
-              ),
+          return ListView(
+            children: [
+              FutureBuilder(
+                future: getTareas(email),
+                  builder: (BuildContext context, AsyncSnapshot<ReqResTareas> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return _ListaTareas(snapshot.data!.Tareas);
+                }
+              })
             ],
-          ));
+          );
         },
       ),
     );
+  }
+}
+
+class _ListaTareas extends StatelessWidget {
+  final List<Tarea> tareas;
+
+  _ListaTareas(this.tareas);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return ListView.builder(
+        itemCount: tareas.length,
+        itemBuilder: (BuildContext context, int index) {
+          final tarea = tareas[index];
+
+          return ListTile(
+            title: Text(tarea.titulo),
+            subtitle: Text('Encargado: ${tarea.encargado}'),
+            trailing: Icon(Icons.work_outline_rounded),
+          );
+        });
   }
 }
