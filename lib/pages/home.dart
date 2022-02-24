@@ -40,7 +40,21 @@ class Home extends StatelessWidget {
           width: 100,
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.exit_to_app_outlined))
+          IconButton(
+              onPressed: () {
+                AlertDialog alerta = AlertDialog(
+                  content: Text("¿Desea Salir?"),
+                  actions: <Widget>[
+                    TextButton(
+                        onPressed: () => context.read<AuthCubit>().signOut(),
+                        child: Text("Ok"))
+                  ],
+                );
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => alerta);
+              },
+              icon: Icon(Icons.exit_to_app_outlined))
         ],
       ),
       body: BlocBuilder<AuthCubit, AuthState>(
