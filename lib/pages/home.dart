@@ -33,7 +33,16 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: MiAppbar(),
+      appBar: AppBar(
+        backgroundColor: Colors.grey[850],
+        title: Image.asset(
+          "assets/images/logo.png",
+          width: 100,
+        ),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.exit_to_app_outlined))
+        ],
+      ),
       body: BlocBuilder<AuthCubit, AuthState>(
         buildWhen: (previous, current) => current is AuthSignedIn,
         builder: (_, state) {
@@ -64,8 +73,14 @@ class Home extends StatelessWidget {
                       return _ListaTareas(snapshot.data!.todas);
                     }
                   }),
-              Text("Lista de Vehiculos"),
-              Divider(),
+              Padding(
+                padding: EdgeInsets.only(top: 10, left: 10),
+                child: Text("Lista de Vehiculos",
+                    style: TextStyle(fontSize: 20, color: Colors.white)),
+              ),
+              Divider(
+                color: Colors.grey[350],
+              ),
               FutureBuilder(
                   future: getVehiculos(email),
                   builder: (BuildContext context,
@@ -102,10 +117,24 @@ class _ListaVehiculos extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final vehiculo = vehiculos[index];
 
-          return ListTile(
-            title: Text(vehiculo.placa),
-            subtitle: Text('Modelo: ${vehiculo.modelo}'),
-          );
+          return Card(
+              child: ListTile(
+                  leading: Icon(
+                    Icons.car_repair,
+                    size: 50,
+                  ),
+                  title: Text(vehiculo.placa),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Text>[
+                      Text(
+                        'Marca: ${vehiculo.marca}',
+                      ),
+                      Text('Modelo: ${vehiculo.modelo}')
+                    ],
+                  ),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true));
         });
   }
 }
@@ -117,7 +146,6 @@ class _ListaTareas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ListView.builder(
         primary: false,
         scrollDirection: Axis.vertical,
@@ -126,55 +154,22 @@ class _ListaTareas extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final tarea = tareas[index];
 
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(5),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: FittedBox(
-                      child: Column(
-                        children: <Widget>[
-                          Text(tarea.titulo),
-                          Text(tarea.descripcion),
-                          Row(
-                            children: <Text>[
-                              Text("Pasos: "),
-                              Text(tarea.pasos),
-                              Text(tarea.encargado)
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 70,
-                    height: 70,
+          return Card(
+              child: ListTile(
+                  leading: Container(
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(50),
                         image: DecorationImage(
                             image: NetworkImage(tarea.encargadoFoto),
                             fit: BoxFit.cover)),
                   ),
-                  Container(
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {},
-                            child: Icon(Icons.delete_forever_outlined)),
-                        ElevatedButton(
-                            onPressed: () {}, child: Icon(Icons.edit))
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
+                  title: Text(tarea.titulo),
+                  subtitle: Text(tarea.descripcion),
+                  trailing: Icon(Icons.more_vert),
+                  isThreeLine: true));
         });
+    // TODO: implement build
   }
 }
