@@ -6,18 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 // const URL = "https://asistente-mecanico.herokuapp.com/api/vehiculos/";
-const URL = "https://192.168.1.15:3000/api/vehiculos/";
+const URLVEHICULOS = "https://asistente-mecanico.herokuapp.com/api/vehiculos/";
+const URLTAREAS = "https://asistente-mecanico.herokuapp.com/api/tareas/";
 
 Future<ReqResVehiculos> getVehiculos(var email) async {
-  var uri = Uri.parse(URL + email);
-
+  var uri = Uri.parse(URLVEHICULOS + email);
   final resp = await http.get(uri);
 
   return reqResVehiculosFromJson(resp.body);
 }
 
 Future<ReqResTareas> getTareas(var email) async {
-  var uri = Uri.parse(URL + email);
+  var uri = Uri.parse(URLTAREAS + email);
 
   final resp = await http.get(uri);
 
@@ -32,6 +32,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: MiAppbar(),
       body: BlocBuilder<AuthCubit, AuthState>(
         buildWhen: (previous, current) => current is AuthSignedIn,
@@ -39,18 +40,44 @@ class Home extends StatelessWidget {
           final authUser = (state as AuthSignedIn).user;
           email = authUser.email;
           return ListView(
+            primary: false,
             children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10, left: 10),
+                child: Text(
+                  "Lista de tareas",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+              Divider(
+                color: Colors.grey[350],
+              ),
               FutureBuilder(
-                future: getTareas(email),
-                  builder: (BuildContext context, AsyncSnapshot<ReqResTareas> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return _ListaTareas(snapshot.data!.Tareas);
-                }
-              })
+                  future: getTareas(email),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ReqResTareas> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return _ListaTareas(snapshot.data!.todas);
+                    }
+                  }),
+              Text("Lista de Vehiculos"),
+              Divider(),
+              FutureBuilder(
+                  future: getVehiculos(email),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ReqResVehiculos> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return _ListaVehiculos(snapshot.data!.vehiculos);
+                    }
+                  })
             ],
           );
         },
@@ -59,8 +86,32 @@ class Home extends StatelessWidget {
   }
 }
 
+class _ListaVehiculos extends StatelessWidget {
+  final List<Vehiculo> vehiculos;
+
+  _ListaVehiculos(this.vehiculos);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        primary: false,
+        shrinkWrap: true,
+        itemCount: vehiculos.length,
+        itemBuilder: (BuildContext context, int index) {
+          final vehiculo = vehiculos[index];
+
+          return ListTile(
+            title: Text(vehiculo.placa),
+            subtitle: Text('Modelo: ${vehiculo.modelo}'),
+          );
+        });
+  }
+}
+
 class _ListaTareas extends StatelessWidget {
-  final List<Tarea> tareas;
+  final List<Toda> tareas;
 
   _ListaTareas(this.tareas);
 
@@ -68,14 +119,61 @@ class _ListaTareas extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return ListView.builder(
+        primary: false,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         itemCount: tareas.length,
         itemBuilder: (BuildContext context, int index) {
           final tarea = tareas[index];
 
-          return ListTile(
-            title: Text(tarea.titulo),
-            subtitle: Text('Encargado: ${tarea.encargado}'),
-            trailing: Icon(Icons.work_outline_rounded),
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: FittedBox(
+                      child: Column(
+                        children: <Widget>[
+                          Text(tarea.titulo),
+                          Text(tarea.descripcion),
+                          Row(
+                            children: <Text>[
+                              Text("Pasos: "),
+                              Text(tarea.pasos),
+                              Text(tarea.encargado)
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            image: NetworkImage(tarea.encargadoFoto),
+                            fit: BoxFit.cover)),
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {},
+                            child: Icon(Icons.delete_forever_outlined)),
+                        ElevatedButton(
+                            onPressed: () {}, child: Icon(Icons.edit))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           );
         });
   }

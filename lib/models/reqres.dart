@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:meta/meta.dart';
 
 ReqResTareas reqResTareasFromJson(String str) => ReqResTareas.fromJson(json.decode(str));
 
@@ -6,22 +7,22 @@ String reqResTareasToJson(ReqResTareas data) => json.encode(data.toJson());
 
 class ReqResTareas {
     ReqResTareas({
-        required this.Tareas,
+        required this.todas,
     });
 
-    List<Tarea> Tareas;
+    List<Toda> todas;
 
     factory ReqResTareas.fromJson(Map<String, dynamic> json) => ReqResTareas(
-        Tareas: List<Tarea>.from(json["tareas"].map((x) => Tarea.fromJson(x))),
+        todas: List<Toda>.from(json["todas"].map((x) => Toda.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "tareas": List<dynamic>.from(Tareas.map((x) => x.toJson())),
+        "todas": List<dynamic>.from(todas.map((x) => x.toJson())),
     };
 }
 
-class Tarea {
-    Tarea({
+class Toda {
+    Toda({
         required this.id,
         required this.titulo,
         required this.descripcion,
@@ -53,7 +54,7 @@ class Tarea {
     DateTime updatedAt;
     int v;
 
-    factory Tarea.fromJson(Map<String, dynamic> json) => Tarea(
+    factory Toda.fromJson(Map<String, dynamic> json) => Toda(
         id: json["_id"],
         titulo: json["titulo"],
         descripcion: json["descripcion"],
